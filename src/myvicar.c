@@ -119,7 +119,7 @@ int card_store(int index,int pos,int flag){
 	int i ;
 	int ret = 0 ;
 	if (line_items[pos] == 0) {
-		printf("ERROR:card_store:unmatch pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
+		sprintf(stderr,"ERROR:card_store:unmatch pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
 		print_out(index,"e");
 		return 0 ; // BUG??
 	}
@@ -132,7 +132,7 @@ int card_store(int index,int pos,int flag){
 		}else if(get_card_hash(index,pos,i)==0){
 			// エントリにはない。
 			if(!flag){
-				printf("ERROR:card_store:not find  pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
+				fprintf(stderr,"ERROR:card_store:not find  pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
 				print_out(index,"e");
 				return 0;
 			}
@@ -141,7 +141,7 @@ int card_store(int index,int pos,int flag){
 	}
 	if( i>= card_size ){
 		// over flow
-		printf("warnning:card_store:card can't find(overflow) pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
+		fprintf(stderr,"warnning:card_store:card can't find(overflow) pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
 		print_out(index,"w");
 		if ( flag ){
 			i = card_size -1 ;
@@ -371,7 +371,7 @@ void main_loop(){
 			action_line();// line 毎の処理
 		}
 		if ((par_stat != 0) && (line % par_stat == 0)) {
-			printf("STAT %d %s,%s\n",line,get_stat_str(),label_stat());
+			fprintf(stderr,"STAT %d %s,%s\n",line,get_stat_str(),label_stat());
 		}
 	}
 
