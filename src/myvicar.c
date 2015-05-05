@@ -322,7 +322,9 @@ int ViG(int pos){
 	int index = 0 ;
 	if( pos != 0 ){
 		index = store();
-//		sprintf(buf,"STORE_%d_",pos);debug_print_cache_hash(index,buf);
+		if(is_for_debug(DEBUG_VIG)){
+			debug_print_cache_hash(index,"G");
+		}
 		// 異なり数の計数
 		for(i=0;i<pos;i++){
 			if( cached_item(index,i) <= 0 ){
@@ -331,7 +333,9 @@ int ViG(int pos){
 				crnt_items[i]=0;
 			}
 		}
-//		sprintf(buf,"ViGII_%d_",pos);debug_print_cache_hash(index,buf);
+		if(is_for_debug(DEBUG_VIG)){
+			debug_print_cache_hash(index,"g");
+		}
 	}
 	for(i=pos;i<item_size;i++){
 		crnt_items[i] = line_items[i];
@@ -339,7 +343,6 @@ int ViG(int pos){
 		crnt_items[i] = 0;
 		variety_check(index,res,i);
 	}
-//	if( pos!=0) {sprintf(buf,"ViG-I_%d_",pos);debug_print_cache_hash(index,buf);}
 	return index;
 }
 
