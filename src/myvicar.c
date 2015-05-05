@@ -287,32 +287,15 @@ inline void cleanup_store(){
 
 inline void variety_check(int target,int subject,int pos){
 	if ( (target <= 0) || (subject <=0) || (cache_count[subject] == 0) ) return ;
-	debug_print_cache_hash(target,"v");
-	debug_print_cache_hash(subject,"V");
+	if (is_for_debug(DEBUG_VARIETY)){
+		debug_print_cache_hash(target,"v");
+		debug_print_cache_hash(subject,"V");
+	}
 
-	//	debug_print_header(target,"v");printf("\n");
-//	debug_print_header(subject,"V");printf("\n");
-//	if ((first[target]==line) ||(last[subject] > first[target])){// MAYBE INCLUDE BUG!!!!!
-//		card_store2(target,pos,(0==0));
-//		*(cache_hash+target*item_size+pos) += -1 ;
-//		card_store(target,pos);
-//	}else{
-//		card_store2(target,pos,(0==1));
-//		card_countup(target,pos);
-//	}
-
-//	int flag = ((first[target]==line) ||(last[subject] > first[target])) ;
-//	int flag = ((first[target]==line) ||(last[subject] > first[target]) || (last[target]<last[subject]) ) ;
-//	int flag = ((last[subject] > first[target]) || (last[target]<last[subject]) ) ;
-//	int flag = !((first[target]>=last[subject])&&(last[subject]>=last[target]));
 	int flag = ((first[target]==line) || (first[target]>last[subject]) || (last[target]<first[subject]));
-
 	// * flag  : true ならエントリーを追加する。
-
 	int ret  = card_store(target,pos,flag);
-//	printf("variety %d %s %s\n",line_items[pos],get_label_by(line_items[pos]),flag?"new entry":"add");
 	*(cache_hash+item_size*target+pos) -= ret ;
-//	print_out(target,"X");
 }
 
 
