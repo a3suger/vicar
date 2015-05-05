@@ -15,6 +15,7 @@
 #include "mem.h"
 #include "line.h"
 #include "label.h"
+#include "debug.h"
 
 /*
  * parameter for calcurate
@@ -26,6 +27,7 @@ size_t        item_length = 32 ;
 unsigned int  rnd2_loop   = 4 ;
 unsigned int  threshold   = 100 ;
 unsigned int  par_stat    = 1000;
+unsigned int  debug_level = 0 ;
 size_t        time_len    = 0 ;
 
 
@@ -364,6 +366,8 @@ void main_loop(){
 			for(i=0;i<num_of_items;i++){
 				action_item(i);// item 毎の処理
 			}
+			if(is_for_debug(DEBUG_INPUT))
+				debug_print_crnt_itemset();
 			action_line();// line 毎の処理
 		}
 		if ((par_stat != 0) && (line % par_stat == 0)) {
@@ -408,8 +412,10 @@ int main(int argc, char **argv) { extern char *optarg;
 	int    i ;
 
 
-	while((i=getopt(argc,argv,"c:t:i:l:n:p:v:T:h?")) != -1)
+	while((i=getopt(argc,argv,"d:c:t:i:l:n:p:v:T:h?")) != -1)
 		switch ( i ) {
+		case 'd':
+			debug_level = abs(atoi(optarg));break;
 		case 'c':
 			cache_limit = abs(atoi(optarg))*1024;	break;
 		case 't':
