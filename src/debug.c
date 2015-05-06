@@ -37,16 +37,48 @@ inline char * make_cardinarity_label(int index, int pos){
 	return card_string;
 }
 
+#define W_STR    1
+#define W_LINE   6
+#define W_HASH   8
+#define W_COUNT  6
+#define W_LABEL  16
+
+#define FMT_HEADER   "%*s%0*d:%*x:%*d:%*d:%*d"
+#define FMT_HEADER_S "%*s%0*d:%*s:%*s:%*s:%*s"
+#define FMT_HEADER_D "%*s%-*s %*s %*s %*s %*s"
+
+#define FMT_ITEM     ":%*x:%-*s"
+#define FMT_ITEM_S   ":%*d:%-*s"
+#define FMT_ITEM_D   ":%*s:%-*s"
+
 inline void debug_print_header(FILE *fd,int index, char *str){
-	fprintf(fd,"%1s%06d:%8x:%6d:%6d:%6d",str,line,index,cache_count[index],first[index],last[index]);
+	fprintf(fd, FMT_HEADER,
+			W_STR,  str,
+			W_LINE, line,
+			W_HASH, index,
+			W_COUNT,cache_count[index],
+			W_COUNT,first[index],
+			W_COUNT,last[index]);
 }
 
 inline void debug_print_header_simple(FILE *fd,char *str1,char *str2){
-	fprintf(fd,"%1s%06d:%8s:%6s:%6s:%6s",str1,line,str2,"","","");
+	fprintf(fd, FMT_HEADER_S,
+			W_STR,  str1,
+			W_LINE, line,
+			W_HASH, str2,
+			W_COUNT,"",
+			W_COUNT,"",
+			W_COUNT,"");
 }
 
 inline void debug_print_header_dummy(FILE *fd){
-	fprintf(fd,"%1s%6s %8s %6s %6s %6s","","","","","","");
+	fprintf(fd, FMT_HEADER_D,
+			W_STR,  "",
+			W_LINE, "",
+			W_HASH, "",
+			W_COUNT,"",
+			W_COUNT,"",
+			W_COUNT,"");
 }
 
 
@@ -54,9 +86,13 @@ inline void debug_print_itemsets(FILE *fd,int *sets,int index ){
 	int i ;
 	for(i=0;i<item_size;i++)
 		if(*(sets+i)<=0){
-			fprintf(fd,":%8d:%-16s",*(sets+i),(index==0)?"(NA)":make_cardinarity_label(index,i));
+			fprintf(fd,FMT_ITEM_S,
+					W_HASH, *(sets+i),
+					W_LABEL,(index==0)?"(NA)":make_cardinarity_label(index,i));
 		}else{
-			fprintf(fd,":%8x:%-16s",*(sets+i),get_label_by(*(sets+i)));
+			fprintf(fd,FMT_ITEM,
+					W_HASH, *(sets+i),
+					W_LABEL,get_label_by(*(sets+i)));
 		}
 	fprintf(fd,"\n");
 }
@@ -78,12 +114,16 @@ inline void print_out(int index,char *str){
 
 	int i,j ;
 	for(j=0;j<card_size;j++){
-		printf("%1s%6s %8s %6s %6s %6s","","","","","","");
+		debug_print_header_dummy(stdout);
 		for(i=0;i<item_size;i++)
 			if((cached_item(index,i)<=0)&&(get_card_count(index,i,j)>0)){
-				printf(":%8x:%-16s",get_card_hash(index,i,j),get_label_by(get_card_hash(index,i,j)));
+				printf(FMT_ITEM,
+						W_HASH,  get_card_hash(index,i,j),
+						W_LABEL, get_label_by(get_card_hash(index,i,j)));
 			}else{
-				printf(":%-8s:%-16s","","");
+				printf(FMT_ITEM_D,
+						W_HASH,  "",
+						W_LABEL, "");
 			}
 		printf("\n");
 	}

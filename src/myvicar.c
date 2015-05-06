@@ -172,45 +172,6 @@ int card_store(int index,int pos,int flag){
 
 
 
-/*
- * 異なり値ごとの数をカウントアップする。
- * index : item_set のエントリーのindex
- * pos   : item_set 内の異なり値を記録する位置
- */
-//inline void card_countup(int index,int pos){
-//	int i ;
-//
-//	// エントリの検索
-//	for(i=0;i<card_size;i++){
-//		if(get_card_hash(index,pos,i)==line_items[pos])break;
-//		if(get_card_hash(index,pos,i)==0){
-//			i=card_size ;
-//			break;
-//		}
-//	}
-//	if( i>=card_size ) {
-//		printf("warnning:card can't find(overflow) pos=%d : %8d:%-16s\n",pos,line_items[pos],get_label_by(line_items[pos]));
-//				// it had overflowed
-//		print_out(index,"w");
-//		return ;
-//	}
-//
-//	if( card_count[(index*item_size+pos)*card_size+i] == 0 )
-//		printf("warning: card_countup: count is zero\n");
-//	if( get_card_hash(index,pos,i) == 0 )
-//		printf("warning: card_countup: hash is zero\n");
-//	card_count[(index*item_size+pos)*card_size+i]++;
-//
-//	// カウント値の降順に並べ替える
-//	if((i!=0)&&get_card_count(index,pos,i-1)<get_card_count(index,pos,i)){
-//		int tmp_count = card_count[(index*item_size+pos)*card_size+i] ;
-//		int tmp_hash  = card_hash[(index*item_size+pos)*card_size+i];
-//		card_count[(index*item_size+pos)*card_size+i]   = card_count[(index*item_size+pos)*card_size+i-1];
-//		card_hash[(index*item_size+pos)*card_size+i]    = card_hash[(index*item_size+pos)*card_size+i-1];
-//		card_count[(index*item_size+pos)*card_size+i-1] = tmp_count ;
-//		card_hash[(index*item_size+pos)*card_size+i-1]  = tmp_hash ;
-//	}
-//}
 
 
 char * get_stat_str(){
@@ -218,9 +179,6 @@ char * get_stat_str(){
 	snprintf(buf,256,"hash[used:%d over:%d] ",used,over);
 	return buf;
 }
-
-
-
 
 
 inline void set_entry(int index){
@@ -247,13 +205,11 @@ inline void first_entry(int index){
 
 // テーブルにエントリを追加する。
 int store(){
-//	debug_print_crnt_itemset();
 	int index = hash2(crnt_items);
 	if (index <= 0 ){
 		index *= -1 ;
 		if( cache_count[index]!=0 ) {// 古いエントリを再利用
-			//print_out(index,'D');
-			debug_print_cache_hash(index,"DUP");
+			print_out(index,'D');
 			over ++;
 		}else{
 			used ++;
@@ -268,7 +224,6 @@ int store(){
 
 	lastidx[idx++]=index;
 	cache_count[index]++;
-//	debug_print_cache_hash(index,"STORE");
 	return index ;
 }
 
@@ -367,6 +322,7 @@ void usage(){
 	fprintf(stderr,"Usage : %s [OPTIONS] [FILE] ....\n",program_name);
 	fputs("\
 \n\
+-d num : debug level\n\
 -c num : cache size\n\
 -t num : thresh\n\
 -i num : item sets\n\
