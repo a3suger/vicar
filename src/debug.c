@@ -108,9 +108,13 @@ inline void debug_print_cache_hash(int index,char *str){
 	debug_print_itemsets(stderr,cache_hash+item_size*index,0);
 }
 
+extern char * times ;
+extern size_t time_len ;
+
 inline void print_out(int index,char *str){
     debug_print_header(stdout,index,str);
-	debug_print_itemsets(stdout,cache_hash+item_size*index,index);
+    if(time_len != 0 ) printf(":%s",times+index*(time_len+1));
+    debug_print_itemsets(stdout,cache_hash+item_size*index,index);
 
 	int i,j ;
 	for(j=0;j<card_size;j++){

@@ -80,6 +80,7 @@ int read_line(){
 	i=0 ;
 	while( (i< time_len) && (c=getchar())!=EOF ){
 		*(time_str + i) = c ;
+		i++;
 	}
 	if (i!= time_len)
 		return -1;
@@ -93,8 +94,8 @@ int read_line(){
 			ret = get_field(item_str+(i*item_len),item_len);
 			if( ((ret<0) ? -ret : ret) >item_len ){
 				// 長すぎたとワーニングメッセージを出す。
-				fprintf(stderr,"LINE %ld:TOO LONG STRING (MAX %d): %s\n",
-						line,(unsigned int)item_len,+(i*item_len));
+				fprintf(stderr,"LINE %d:TOO LONG STRING (MAX %d): %s\n",
+						line,(unsigned int)item_len,item_str+(i*item_len));
 			}
 		}else{
 			ret = get_field(&dummy_item,1);
